@@ -1,8 +1,9 @@
-import { render as renderAmis } from 'amis';
+import { JsonView, render as renderAmis } from 'amis';
 
 import 'amis/lib/themes/cxd.css';
 import 'amis/lib/helper.css';
 import 'amis/sdk/iconfont.css';
+import { Divider } from '@nextui-org/react';
 
 export default function Amis() {
 
@@ -117,7 +118,20 @@ export default function Amis() {
                         "label": "7",
                         "value": "7"
                       }
-                    ]
+                    ],
+                    // "onEvent": {
+                    //   "change": {
+                    //     "actions": [
+                    //       {
+                    //         "actionType": "setValue",
+                    //         "componentId": "ywzb-1",
+                    //         "args": {
+                    //           "value": "${value}"
+                    //         }
+                    //       }
+                    //     ]
+                    //   }
+                    // }
                   },
                   {
                     "type": "textarea",
@@ -128,10 +142,13 @@ export default function Amis() {
                 ],
               },
               {
+                "data": {
+                  "name": "5.00"
+                },
                 "body": {
                   "type": "tpl",
-                  "wrapperComponent": "",
-                  "tpl": "5.00",
+                  "id": "ywzb-1",
+                  "tpl": "111${name}",
                 },
               }
             ],
@@ -311,7 +328,13 @@ export default function Amis() {
   };
 
   return (
-    <div className='container mx-auto p-8'>{renderAmis(ui)}</div>
+    <div className='container mx-auto p-8 flex flex-col gap-2'>
+      JSON:
+      <JsonView src={ui} />
+      <Divider />
+      UI:
+      {renderAmis(ui)}
+    </div>
   )
 }
 
