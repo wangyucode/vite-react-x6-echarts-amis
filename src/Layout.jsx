@@ -47,6 +47,11 @@ export default function Layout() {
               Amis数据驱动UI
             </Link>
           </NavbarItem>
+          <NavbarItem>
+            <Link href="/json-ui" className={`text-lg hover:font-bold ${location.pathname === '/json-ui' ? 'font-bold' : ''}`}>
+              自研JSON UI
+            </Link>
+          </NavbarItem>
         </NavbarContent>
       </Navbar>
       <main className='container p-4 flex justify-center mx-auto'>
