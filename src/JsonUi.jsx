@@ -164,6 +164,7 @@ export default function JsonUi() {
                 <Divider />
                 <CardBody className='gap-2'>
                     <p>UI: <Code className='text-wrap'>{JSON.stringify(ui6)}</Code></p>
+                    <p>Data: <Code className='text-wrap'>{JSON.stringify(data6)}</Code></p>
                     <JsonRenderer json={ui6} data={data6} />
                 </CardBody>
             </Card>
