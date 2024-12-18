@@ -51,25 +51,17 @@ function renderContent(json, data) {
 }
 
 function renderBody(body, data) {
-    const bodyType = getTypeWithRegex(body);
-
+    const bodyType = Object.prototype.toString.call(body);
     switch (bodyType) {
-        case 'String':
+        case '[object String]':
             return renderText(body, data);
-        case 'Object':
+        case '[object Object]':
             return <JsonRenderer json={body} data={data} />;
-        case 'Array':
+        case '[object Array]':
             return body.map((item, index) => <JsonRenderer key={index} json={item} data={data} />);
         default:
             return `wtf:${bodyType}`;
     }
-}
-
-
-function getTypeWithRegex(obj) {
-    let typeStr = Object.prototype.toString.call(obj);
-    let match = typeStr.match(/\[object (\w+)\]/);
-    return match ? match[1] : null;
 }
 
 function renderText(text, data) {
