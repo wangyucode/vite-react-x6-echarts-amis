@@ -49,56 +49,70 @@ export default function JsonUi() {
             params: {
                 label: "请选择数值",
                 orientation: "horizontal",
-                defaultValue: "3",
+                defaultValue: "green",
             },
             events: {
-                onChange: { action: "set", target: "result" }
+                onChange: [{ action: "setData", target: "result.color" }, { action: "setUi", target: "body[1].className", expression: "font-bold text-lg text-${value}-500" }]
             },
-            body: [{ "value": "1" }, { "value": "2" }, { "value": "3" }],
+            body: [{ value: "red", label: "红" }, { value: "blue", label: "蓝" }, { value: "green", label: "绿" }],
         },
         {
-            body: "选择了${result}",
+            body: "选择了${result.color}",
+            className: 'font-bold text-lg text-green-500'
         }]
     };
 
     const data5 = {
-        result: "3"
+        result: { color: "green" }
     }
 
     const ui6 = {
-        type: "table",
-        className: "border-collapse text-xs",
-        body: [
-            {
-                "type": "tr", "className": "bg-blue-100", "body": [
-                    { "type": "th", "body": "评级因素", "params": { "scope": "col" }, "className": "border border-slate-800 p-2" },
-                    { "type": "th", "body": "指标名称", "params": { "scope": "col" }, "className": "border border-slate-800 p-2" },
-                    { "type": "th", "body": "权重", "params": { "scope": "col" }, "className": "border border-slate-800 p-2" },
-                    { "type": "th", "body": "二级指标值", "params": { "scope": "col" }, "className": "border border-slate-800 p-2" },
-                    { "type": "th", "body": "指标得分", "params": { "scope": "col" }, "className": "border border-slate-800 p-2" },
-                ]
-            },
-            {
-                "type": "tr", "body": [
-                    { "type": "th", "body": "业务指标", "params": { "scope": "row" }, "className": "border border-slate-800 p-2" },
-                    { "type": "td", "body": "产品结构及竞争力", "className": "border border-slate-800 p-2" },
-                    { "type": "td", "body": "${weight[0] * 100}%", "className": "border border-slate-800 p-2" },
-                    {
-                        "type": "td", "body": [{
-                            "type": "radio", "params": { "orientation": "horizontal" }, "events": {
-                                "onChange": { "action": "set", "target": "result0" }
-                            }, "body": [{ "value": "1" }, { "value": "2" }, { "value": "3" }]
-                        }, { "type": "textarea", "params": { "label": "请输入调整意见" } }], "className": "border border-slate-800 p-2"
-                    },
-                    { "type": "td", "body": "${(result0 * weight[0]).toFixed(2)}", "className": "border border-slate-800 p-2" }
-                ]
-            },
-        ]
+        body: [{
+            type: "table",
+            className: "border-collapse text-xs w-full",
+            body: [
+                {
+                    "type": "tr", "className": "bg-blue-100", "body": [
+                        { "type": "th", "body": "评级因素", "params": { "scope": "col" }, "className": "border border-slate-800 p-2" },
+                        { "type": "th", "body": "指标名称", "params": { "scope": "col" }, "className": "border border-slate-800 p-2" },
+                        { "type": "th", "body": "权重", "params": { "scope": "col" }, "className": "border border-slate-800 p-2" },
+                        { "type": "th", "body": "二级指标值", "params": { "scope": "col" }, "className": "border border-slate-800 p-2" },
+                        { "type": "th", "body": "指标得分", "params": { "scope": "col" }, "className": "border border-slate-800 p-2" },
+                    ]
+                },
+                {
+                    "type": "tr", "body": [
+                        { "type": "th", "body": "业务指标", "params": { "scope": "row" }, "className": "border border-slate-800 p-2" },
+                        { "type": "td", "body": "产品结构及竞争力", "className": "border border-slate-800 p-2" },
+                        { "type": "td", "body": "${weight[0] * 100}%", "className": "border border-slate-800 p-2" },
+                        {
+                            "type": "td",
+                            "body": [
+                                {
+                                    "type": "radio", "params": { "orientation": "horizontal" }, "events": {
+                                        "onChange": [{ "action": "setData", "target": "result.subValue" }]
+                                    }, "body": [{ "value": "1" }, { "value": "2" }, { "value": "3" }]
+                                }, {
+                                    "type": "textarea", "params": { "label": "请输入调整意见" }, "events": {
+                                        "onChange": [{ "action": "setData", "target": "result.feedback" }]
+                                    },
+                                    "className": "mt-2"
+                                }],
+                            "className": "border border-slate-800 p-2 gap-2"
+                        },
+                        { "type": "td", "body": "${(result.subValue * weight[0]).toFixed(2)}", "className": "border border-slate-800 p-2" }
+                    ]
+                },
+            ]
+        }, {
+            body: "选择的二级指标值为：${result.subValue}, 调整意见为：${result.feedback}",
+            className: "font-bold text-sky-500"
+        }]
     }
 
     const data6 = {
         weight: [0.2],
-        result0: 0
+        result: { subValue: 0, feedback: "" }
     }
 
 

@@ -1,60 +1,65 @@
 
 import { useContext, useState, createContext } from "react";
-import { Textarea } from "@nextui-org/input";
+
 import { template } from "lodash";
 import JsonRadio from "./component/Radio";
+import JsonTextarea from "./component/Textarea";
 
-export const DataContext = createContext(null);
+export const DataContext = createContext([]);
+export const JsonContext = createContext([]);
 
 export default function JsonRenderer({ json, data }) {
 
-    const dataContext = useContext(DataContext);
+    const [internalJson] = useContext(JsonContext);
 
-    if (dataContext) {
-        return renderContent(json, dataContext);
+    if (internalJson) {
+        return renderContent(json, data);
     } else {
-        const [internalData, setInternalData] = useState(data);
+        const jsonState = useState(json);
+        const dataState = useState(data);
         return (
-            <DataContext.Provider value={{ internalData, setInternalData }}>
-                <JsonRenderer json={json} data={internalData} />
-            </DataContext.Provider>
+            <JsonContext.Provider value={jsonState}>
+                <DataContext.Provider value={dataState}>
+                    <JsonRenderer json={jsonState[0]} data={dataState[0]} />
+                </DataContext.Provider>
+            </JsonContext.Provider>
         );
     }
 }
 
 
-function renderContent(json, dataContext) {
+function renderContent(json, data) {
     const { type, body, className, params } = json;
 
     switch (type) {
         case "radio":
             return <JsonRadio json={json} />;
         case "table":
-            return <table className={className}><tbody>{renderBody(body, dataContext.internalData)}</tbody></table>;
+            return <table className={className}><tbody>{renderBody(body, data)}</tbody></table>;
         case "tr":
-            return <tr className={className}>{renderBody(body, dataContext.internalData)}</tr>;
+            return <tr className={className}>{renderBody(body, data)}</tr>;
         case "th":
-            return <th className={className} {...params}>{renderBody(body, dataContext.internalData)}</th>;
+            return <th className={className} {...params}>{renderBody(body, data)}</th>;
         case "td":
-            return <td className={className}>{renderBody(body, dataContext.internalData)}</td>;
+            return <td className={className}>{renderBody(body, data)}</td>;
         case "textarea":
-            return <Textarea className={className}  {...params} />;
+            return <JsonTextarea json={json} />;
         default:
-            return <div className={className}>{renderBody(body, dataContext.internalData)}</div>;
+            return <div className={className}>{renderBody(body, data)}</div>;
     }
 
 }
 
-function renderBody(body, internalData) {
+function renderBody(body, data) {
     const bodyType = getTypeWithRegex(body);
 
     switch (bodyType) {
         case 'String':
-            return renderText(body, internalData);
+            return renderText(body, data);
         case 'Object':
-            return <JsonRenderer json={body} data={internalData} />;
+            return <JsonRenderer json={body} data={data} />;
         case 'Array':
-            return body.map((item, index) => <JsonRenderer key={index} json={item} data={internalData} />);
+            return body.map((item, index) => <JsonRenderer key={index} json={item} data={data} />);
         default:
             return `wtf:${bodyType}`;
     }
